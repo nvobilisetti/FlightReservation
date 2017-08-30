@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.nareen.entity.Flight" table="flights">
+		<meta attribute="class-description">
+			This class contains the employee detail.
+		</meta>
+		<id name="id" type="int" column="flight_id">
+			<generator class="native" />
+		</id>
+		<property name="flightNumber" column="flight_number" type="string" />
+		<property name="flightName" column="flight_name" type="string" />
+		<property name="fromLoc" column="from_city" type="string" />
+		<property name="toLoc" column="to_city" type="string" />
+		<property name="availableTickets" column="tickets_available" type="int" />
+		<property name="ticketPrice" column="ticket_price" type="long" />
+	</class>
+</hibernate-mapping>
