@@ -31,7 +31,7 @@ public class PaymentController {
 	
 	ManageBooking manageBooking = new ManageBooking();
 	ModelAndView mv = new ModelAndView();
-	ExecutorService executorService = Executors.newFixedThreadPool(1);
+	ExecutorService executorService = Executors.newFixedThreadPool(3);
 	public PaymentController() {
 	}
 
@@ -97,6 +97,7 @@ public class PaymentController {
 		
 		String confirmation=(String) request.getAttribute("confirmation");
 		List<Booking> bookingList=manageBooking.iternaryList(confirmation);
+		status.setComplete();
 		mv.addObject("bookingList", bookingList);
 		mv.setViewName("bookingconfirmation");
 		status.setComplete();
