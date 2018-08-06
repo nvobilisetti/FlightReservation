@@ -14,8 +14,6 @@ import org.hibernate.cfg.Configuration;
 import com.nareen.entity.Booking;
 import com.nareen.entity.Flight;
 
-
-
 public class ManageBooking {
 	private static final Logger log = LogManager.getLogger(ManageBooking.class);
 	private static SessionFactory factory;
@@ -27,12 +25,12 @@ public class ManageBooking {
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
-	
-	
-	/*Methods to establish a connection with Booking table*/
+
+	/* Methods to establish a connection with Booking table */
 	public List<Booking> BookedList() {
 		Session session = factory.openSession();
 		Transaction tx = null;
+		//Hello
 		List<Booking> bookingList = null;
 		try {
 			tx = session.beginTransaction();
@@ -47,14 +45,14 @@ public class ManageBooking {
 		}
 		return bookingList;
 	}
-	
+
 	public List<Booking> iternaryList(String confirmation) {
 		Session session = factory.openSession();
 		Transaction tx = null;
 		List<Booking> bookingList = null;
 		try {
 			tx = session.beginTransaction();
-			bookingList = session.createQuery("FROM Booking b where b.confirmation='"+confirmation+"'").list();
+			bookingList = session.createQuery("FROM Booking b where b.confirmation='" + confirmation + "'").list();
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -65,8 +63,7 @@ public class ManageBooking {
 		}
 		return bookingList;
 	}
-	
-	
+
 	public Integer addbooking(Booking booking) {
 		Session session = factory.openSession();
 		Transaction tx = null;
@@ -84,8 +81,7 @@ public class ManageBooking {
 		}
 		return bookingId;
 	}
-	
-	
+
 	public void deleteBooking(Integer BookingId) {
 		Session session = factory.openSession();
 		Transaction tx = null;
@@ -102,17 +98,17 @@ public class ManageBooking {
 			session.close();
 		}
 	}
-	
-	/*Methods to establish a connection with Flights table*/
+
+	/* Methods to establish a connection with Flights table */
 	@SuppressWarnings("unchecked")
-	public List<Flight> listFlights(String from, String to,int noOfTickets) {
+	public List<Flight> listFlights(String from, String to, int noOfTickets) {
 		Session session = factory.openSession();
 		Transaction tx = null;
 		List<Flight> flightList = null;
 		try {
 			tx = session.beginTransaction();
-			flightList = session.createQuery("FROM Flight f Where f.fromLoc='" + from + "' and f.toLoc='" 
-											+ to + "' and f.availableTickets>="+noOfTickets).list();
+			flightList = session.createQuery("FROM Flight f Where f.fromLoc='" + from + "' and f.toLoc='" + to
+					+ "' and f.availableTickets>=" + noOfTickets).list();
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -123,14 +119,14 @@ public class ManageBooking {
 		}
 		return flightList;
 	}
-	
+
 	public List<Flight> getFlight(int flightID) {
 		Session session = factory.openSession();
 		Transaction tx = null;
 		List<Flight> flightDetails = null;
 		try {
 			tx = session.beginTransaction();
-			flightDetails =session.createQuery("FROM Flight f Where f.id='" + flightID + "'").list();
+			flightDetails = session.createQuery("FROM Flight f Where f.id='" + flightID + "'").list();
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -145,14 +141,14 @@ public class ManageBooking {
 	public String updateSeats(int flightID, int noOfSeats) {
 		Session session = factory.openSession();
 		Transaction tx = null;
-		String confirmation=null;
+		String confirmation = null;
 		try {
 			tx = session.beginTransaction();
 			Flight flight = (Flight) session.get(Flight.class, flightID);
 			flight.setAvailableTickets(noOfSeats);
 			session.update(flight);
 			tx.commit();
-			confirmation=getConformation();
+			confirmation = getConformation();
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
@@ -162,9 +158,7 @@ public class ManageBooking {
 		}
 		return confirmation;
 	}
-	
-	
-	
+
 	public List<Flight> listFlightDetails() {
 		Session session = factory.openSession();
 		Transaction tx = null;
@@ -182,23 +176,22 @@ public class ManageBooking {
 		}
 		return flightList;
 	}
-	
-	
-	public String atomicTransaction(List<Booking> passengerList,int flightID, int noOfSeats) {
-		
+
+	public String atomicTransaction(List<Booking> passengerList, int flightID, int noOfSeats) {
+
 		Session session = factory.openSession();
 		Transaction tx = null;
-		String confirmation=null;
+		String confirmation = null;
 		try {
 			tx = session.beginTransaction();
 			Flight flight = (Flight) session.get(Flight.class, flightID);
 			flight.setAvailableTickets(noOfSeats);
 			session.update(flight);
-			confirmation=getConformation();
-			for(Booking passenger:passengerList) {
-			passenger.setConfirmation(confirmation);
-			passenger.setFlightNumber(flight.getFlightNumber());
-			session.save(passenger);
+			confirmation = getConformation();
+			for (Booking passenger : passengerList) {
+				passenger.setConfirmation(confirmation);
+				passenger.setFlightNumber(flight.getFlightNumber());
+				session.save(passenger);
 			}
 			tx.commit();
 		} catch (HibernateException e) {
@@ -209,7 +202,7 @@ public class ManageBooking {
 			session.close();
 		}
 		return confirmation;
-		
+
 	}
 
 	public String getConformation() {
